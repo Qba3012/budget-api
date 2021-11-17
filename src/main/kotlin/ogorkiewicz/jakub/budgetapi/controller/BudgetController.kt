@@ -1,14 +1,21 @@
 package ogorkiewicz.jakub.budgetapi.controller
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import lombok.AllArgsConstructor
+import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
+import ogorkiewicz.jakub.budgetapi.business.BudgetService
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/budgets")
-class BudgetController {
+class BudgetController(val budgetService: BudgetService) {
 
-    @GetMapping
-    fun sayHello(): String = "Hello"
+    @PostMapping
+    fun addNewBudget(@RequestBody budgetDto: BudgetDto): ResponseEntity<BudgetDto> = ResponseEntity.ok(
+        budgetService
+            .save
+                (budgetDto)
+    )
 
 }
