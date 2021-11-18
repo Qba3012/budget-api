@@ -8,9 +8,12 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.verifyNoInteractions
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.inOrder
 import org.mockito.junit.jupiter.MockitoExtension
+
 
 @ExtendWith(MockitoExtension::class)
 internal class BudgetServiceImplTest {
@@ -36,5 +39,34 @@ internal class BudgetServiceImplTest {
 
         // then
         assertThat(newBudgetDto).usingRecursiveComparison().isEqualTo(DummyData.BUDGET_DTO)
+    }
+
+    @Test
+    fun shouldGetBudgetBySlug() {
+        // given
+        given(budgetRepository.findBySlug(DummyData.BUDGET_SLUG)).willReturn(DummyData.BUDGET)
+        given(modelMapper.toDto(DummyData.BUDGET)).willReturn(DummyData.BUDGET_DTO)
+
+        // when
+        val budgetDto = budgetService.findBySlug(DummyData.BUDGET_SLUG)
+
+        // then
+        assertThat(budgetDto).usingRecursiveComparison().isEqualTo(DummyData.BUDGET_DTO)
+    }
+
+    @Test
+    fun shouldNotFindBudgetIfSlugDoesNotExist() {
+        // given
+        given(budgetRepository.findBySlug(DummyData.BUDGET_SLUG)).willReturn(null)
+
+        // when
+        val budgetDto = budgetService.findBySlug(DummyData.BUDGET_SLUG)
+
+        // then
+        val inOrder = inOrder(budgetRepository, modelMapper)
+
+        inOrder.verify(budgetRepository).findBySlug(DummyData.BUDGET_SLUG)
+        verifyNoInteractions(modelMapper)
+        assertThat(budgetDto).isNull()
     }
 }

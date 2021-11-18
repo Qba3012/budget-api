@@ -5,9 +5,14 @@ import ogorkiewicz.jakub.budgetapi.dto.ModelMapper
 import org.springframework.stereotype.Service
 
 @Service
-class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper: ModelMapper): BudgetService {
+class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper: ModelMapper) : BudgetService {
     override fun save(budgetDto: BudgetDto): BudgetDto {
         val newEntity = budgetRepository.save(modelMapper.toEntity(budgetDto))
         return modelMapper.toDto(newEntity)
+    }
+
+    override fun findBySlug(slug: String): BudgetDto? {
+        val entity = budgetRepository.findBySlug(slug)
+        return if (null == entity) null else modelMapper.toDto(entity)
     }
 }
