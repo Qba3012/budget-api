@@ -3,10 +3,15 @@ package ogorkiewicz.jakub.budgetapi.business
 import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
 import ogorkiewicz.jakub.budgetapi.dto.ModelMapper
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
+import javax.validation.Valid
 
+@Validated
 @Service
-class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper: ModelMapper) : BudgetService {
-    override fun save(budgetDto: BudgetDto): BudgetDto {
+class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper: ModelMapper) :
+    BudgetService {
+
+    override fun save(@Valid budgetDto: BudgetDto): BudgetDto {
         val newEntity = budgetRepository.save(modelMapper.toEntity(budgetDto))
         return modelMapper.toDto(newEntity)
     }

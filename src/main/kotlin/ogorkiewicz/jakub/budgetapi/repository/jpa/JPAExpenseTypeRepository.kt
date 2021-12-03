@@ -1,4 +1,4 @@
-package ogorkiewicz.jakub.budgetapi.repository
+package ogorkiewicz.jakub.budgetapi.repository.jpa
 
 import ogorkiewicz.jakub.budgetapi.model.ExpenseType
 import org.springframework.data.jpa.repository.JpaRepository

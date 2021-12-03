@@ -5,23 +5,26 @@ import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
 import ogorkiewicz.jakub.budgetapi.dto.ExpenseDto
 import ogorkiewicz.jakub.budgetapi.dto.IncomeDto
 import ogorkiewicz.jakub.budgetapi.model.*
+import java.lang.Math.random
 import java.math.BigDecimal
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import kotlin.math.roundToInt
 
 class DummyData {
     companion object {
         // Values
-        val TEST_DATE = LocalDateTime.now()
-        val TEST_VALUE = BigDecimal(15000)
+        val TEST_DATE = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        val TEST_VALUE = BigDecimal("15000.99")
 
         // Account
-        val ACCOUNT_ID ="test-account"
+        val ACCOUNT_ID = "test-account"
         val ACCOUNT_TITLE = "Test account"
         val ACCOUNT = Account(ACCOUNT_ID, ACCOUNT_TITLE, TEST_VALUE)
         val ACCOUNT_DTO = AccountDto(ACCOUNT_ID, ACCOUNT_TITLE, TEST_VALUE)
 
         // Income
-        val INCOME_ID ="test-income"
+        val INCOME_ID = "test-income"
         val INCOME_TITLE = "Test income"
         val INCOME = Income(INCOME_ID, INCOME_TITLE, TEST_VALUE, TEST_DATE)
         val INCOME_DTO = IncomeDto(INCOME_ID, INCOME_TITLE, TEST_VALUE, TEST_DATE)
@@ -37,20 +40,41 @@ class DummyData {
         val EXPENSE_CATEGORY = ExpenseCategory(EXPENSE_CATEGORY_ID, EXPENSE_CATEGORY_NAME)
 
         // Expense
-        val EXPENSE_ID ="test-expense"
+        val EXPENSE_ID = "test-expense"
         val EXPENSE_TITLE = "Test expense"
         val EXPENSE = Expense(EXPENSE_ID, EXPENSE_TITLE, TEST_VALUE, TEST_DATE, EXPENSE_TYPE, EXPENSE_CATEGORY)
-        val EXPENSE_DTO = ExpenseDto(EXPENSE_ID, EXPENSE_TITLE, TEST_VALUE, TEST_DATE, EXPENSE_TYPE_NAME,
-            EXPENSE_CATEGORY_NAME)
+        val EXPENSE_DTO = ExpenseDto(
+            EXPENSE_ID, EXPENSE_TITLE, TEST_VALUE, TEST_DATE, EXPENSE_TYPE_NAME,
+            EXPENSE_CATEGORY_NAME
+        )
 
         // Budget
-        val BUDGET_ID = 1L
-        val BUDGET_SLUG= "jan-2020"
+        val BUDGET_ID = 2L
+        val BUDGET_SLUG = "jan-2020"
         val BUDGET_MONTH = 1
         val BUDGET_YEAR = 2020
-        val BUDGET = Budget(BUDGET_ID, BUDGET_SLUG, BUDGET_MONTH, BUDGET_YEAR, listOf(ACCOUNT), listOf(INCOME),
-            listOf(EXPENSE))
-        val BUDGET_DTO = BudgetDto(BUDGET_ID, BUDGET_SLUG, BUDGET_MONTH, BUDGET_YEAR, listOf(ACCOUNT_DTO), listOf
-            (EXPENSE_DTO),listOf(INCOME_DTO))
+        val BUDGET = Budget(
+            BUDGET_ID, BUDGET_SLUG, BUDGET_MONTH, BUDGET_YEAR, listOf(ACCOUNT), listOf(INCOME),
+            listOf(EXPENSE)
+        )
+        val BUDGET_DTO = BudgetDto(
+            BUDGET_ID, BUDGET_SLUG, BUDGET_MONTH, BUDGET_YEAR, listOf(ACCOUNT_DTO), listOf
+                (EXPENSE_DTO), listOf(INCOME_DTO)
+        )
+
+        fun generateAccountDto() = AccountDto(randomize(ACCOUNT_ID), ACCOUNT_TITLE, TEST_VALUE)
+
+        fun generateIncomeDto() = IncomeDto(randomize(INCOME_ID), INCOME_TITLE, TEST_VALUE, TEST_DATE)
+
+        fun generateExpenseDto() = ExpenseDto(
+            randomize(EXPENSE_ID), EXPENSE_TITLE, TEST_VALUE, TEST_DATE,
+            EXPENSE_TYPE_NAME, EXPENSE_CATEGORY_NAME)
+
+        fun generateBudgetDto() = BudgetDto(null, randomize(BUDGET_SLUG), BUDGET_MONTH, BUDGET_YEAR, listOf
+            (generateAccountDto()),
+            listOf(generateExpenseDto()), listOf(generateIncomeDto())
+        )
+
+        private fun randomize(id: String) = id + ((random() * 10000).roundToInt())
     }
 }
