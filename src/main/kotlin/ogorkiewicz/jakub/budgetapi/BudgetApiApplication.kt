@@ -3,6 +3,7 @@ package ogorkiewicz.jakub.budgetapi
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
+
 @SpringBootApplication
 class BudgetApiApplication
 

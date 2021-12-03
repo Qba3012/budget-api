@@ -1,0 +1,9 @@
+package ogorkiewicz.jakub.budgetapi.business
+
+import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
+import javax.validation.Valid
+
+interface BudgetService {
+    fun save(@Valid budgetDto: BudgetDto): BudgetDto
+    fun findBySlug(slug: String): BudgetDto?
+}
