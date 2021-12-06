@@ -6,6 +6,7 @@ import ogorkiewicz.jakub.budgetapi.controller.BUDGETS_PATH
 import ogorkiewicz.jakub.budgetapi.controller.ValidationResponse
 import ogorkiewicz.jakub.budgetapi.dto.AccountDto
 import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
+import ogorkiewicz.jakub.budgetapi.dto.HistoryDto
 import ogorkiewicz.jakub.budgetapi.dummies.DummyData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -83,6 +84,35 @@ internal class BudgetControllerTest {
     }
 
     @Test
+    fun `should get budget history`() {
+        // given
+        val budgetDto = DummyData.generateBudgetDto()
+        createBudget(budgetDto)
+
+        //when //then
+        mockMvc.get("$BUDGETS_PATH/history") {
+            accept = APPLICATION_JSON
+        }.andExpect {
+            content { contentType(APPLICATION_JSON) }
+            content {
+                match { mvcResult ->
+                    val results =
+                        mapper.readValue(
+                            mvcResult.response.getContentAsString(Charset.defaultCharset()),
+                            object : TypeReference<List<HistoryDto>>() {}
+                        )
+                    val history = results.find { history -> history.year == budgetDto.year }
+                    assertThat(history).isNotNull
+                    val month = history?.months?.find { month -> month.month == budgetDto.month && month.slug ==
+                            budgetDto.slug }
+                    assertThat(month).isNotNull
+                }
+            }
+        }
+
+    }
+
+    @Test
     fun `should not add new budget with wrong general data`() {
         //given
         val invalidBudgetDto = BudgetDto(
@@ -94,7 +124,7 @@ internal class BudgetControllerTest {
         )
 
         //when //then
-        doInvalidRequestTest(invalidBudgetDto, listOf(blankError,invalidMonthError,invalidYearError))
+        doInvalidRequestTest(invalidBudgetDto, listOf(blankError, invalidMonthError, invalidYearError))
     }
 
     @Test

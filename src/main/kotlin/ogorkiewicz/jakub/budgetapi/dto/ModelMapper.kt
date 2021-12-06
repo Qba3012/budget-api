@@ -2,7 +2,12 @@ package ogorkiewicz.jakub.budgetapi.dto
 
 import ogorkiewicz.jakub.budgetapi.business.ExpenseCategoryRepository
 import ogorkiewicz.jakub.budgetapi.business.ExpenseTypeRepository
-import ogorkiewicz.jakub.budgetapi.model.*
+import ogorkiewicz.jakub.budgetapi.model.Account
+import ogorkiewicz.jakub.budgetapi.model.Budget
+import ogorkiewicz.jakub.budgetapi.model.Expense
+import ogorkiewicz.jakub.budgetapi.model.ExpenseCategory
+import ogorkiewicz.jakub.budgetapi.model.ExpenseType
+import ogorkiewicz.jakub.budgetapi.model.Income
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,6 +28,19 @@ class ModelMapper(
         val incomes = budgetDto.incomes.map { incomeDto -> toEntity(incomeDto) }
         val expenses = budgetDto.expenses.map { expenseDto -> toEntity(expenseDto) }
         return Budget(null, budgetDto.slug, budgetDto.month, budgetDto.year, accounts, incomes, expenses)
+    }
+
+    fun toHistoryDto(budgets: List<Budget>): List<HistoryDto> {
+        val allHistory = mutableListOf<HistoryDto>()
+        budgets.forEach {
+            val history = allHistory.find { history -> history.year == it.year }
+            if(null != history) {
+                history.months.add(MonthDto(it.slug,it.month))
+            } else {
+                allHistory.add(HistoryDto(it.year, mutableListOf<MonthDto>(MonthDto(it.slug,it.month))))
+            }
+        }
+        return allHistory;
     }
 
     private fun toEntity(expenseDto: ExpenseDto): Expense {
@@ -53,6 +71,5 @@ class ModelMapper(
     private fun toDto(account: Account): AccountDto = AccountDto(account.id, account.title, account.amount)
 
     private fun toDto(income: Income): IncomeDto = IncomeDto(income.id, income.title, income.amount, income.date)
-
 
 }

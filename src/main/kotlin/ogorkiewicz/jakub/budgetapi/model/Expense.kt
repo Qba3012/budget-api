@@ -12,9 +12,9 @@ class Expense(
     title: String,
     amount: BigDecimal,
     date: LocalDateTime,
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne(cascade = [CascadeType.PERSIST])
     val expenseType: ExpenseType,
-    @ManyToOne(cascade = [CascadeType.ALL])
+    @ManyToOne(cascade = [CascadeType.PERSIST])
     val expenseCategory: ExpenseCategory
 ) : BudgetItem(id, title, amount, date)
 

@@ -2,7 +2,9 @@ package ogorkiewicz.jakub.budgetapi.unit
 
 import ogorkiewicz.jakub.budgetapi.business.BudgetRepository
 import ogorkiewicz.jakub.budgetapi.business.BudgetServiceImpl
+import ogorkiewicz.jakub.budgetapi.dto.HistoryDto
 import ogorkiewicz.jakub.budgetapi.dto.ModelMapper
+import ogorkiewicz.jakub.budgetapi.dto.MonthDto
 import ogorkiewicz.jakub.budgetapi.dummies.DummyData
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.Test
@@ -65,6 +67,21 @@ internal class BudgetServiceImplTest {
 
         // then
         assertThat(budgetDto).usingRecursiveComparison().isEqualTo(DummyData.BUDGET_DTO)
+    }
+
+    @Test
+    fun shouldGetBudgetsHistory() {
+        // given
+        val historyDto = HistoryDto(DummyData.BUDGET_YEAR,
+            mutableListOf(MonthDto(DummyData.BUDGET_SLUG, DummyData.BUDGET_MONTH)))
+        given(budgetRepository.findAll()).willReturn(listOf(DummyData.BUDGET))
+        given(modelMapper.toHistoryDto(listOf(DummyData.BUDGET))).willReturn(listOf(historyDto))
+
+        // when
+        val historyResult = budgetService.getHistory()
+
+        // then
+        assertThat(historyResult).usingRecursiveComparison().isEqualTo(listOf(historyDto));
     }
 
     @Test

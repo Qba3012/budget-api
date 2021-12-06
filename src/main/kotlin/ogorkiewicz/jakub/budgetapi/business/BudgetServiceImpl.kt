@@ -1,6 +1,7 @@
 package ogorkiewicz.jakub.budgetapi.business
 
 import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
+import ogorkiewicz.jakub.budgetapi.dto.HistoryDto
 import ogorkiewicz.jakub.budgetapi.dto.ModelMapper
 import org.springframework.stereotype.Service
 import org.springframework.validation.annotation.Validated
@@ -24,5 +25,10 @@ class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper:
     override fun findLatest(): BudgetDto? {
         val entity = budgetRepository.findLatest()
         return if (null == entity) null else modelMapper.toDto(entity)
+    }
+
+    override fun getHistory(): List<HistoryDto>? {
+        val budgets = budgetRepository.findAll();
+        return modelMapper.toHistoryDto(budgets)
     }
 }

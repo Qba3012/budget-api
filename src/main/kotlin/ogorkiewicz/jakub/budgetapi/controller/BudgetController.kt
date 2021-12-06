@@ -2,9 +2,15 @@ package ogorkiewicz.jakub.budgetapi.controller
 
 import ogorkiewicz.jakub.budgetapi.business.BudgetService
 import ogorkiewicz.jakub.budgetapi.dto.BudgetDto
+import ogorkiewicz.jakub.budgetapi.dto.HistoryDto
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 const val BUDGETS_PATH = "/budgets"
 
@@ -30,5 +36,8 @@ class BudgetController(val budgetService: BudgetService) {
         val budgetDto = budgetService.findLatest()
         return if(null == budgetDto) ResponseEntity.notFound().build() else ResponseEntity.ok(budgetDto)
     }
+
+    @GetMapping("/history", produces = [APPLICATION_JSON_VALUE])
+    fun getBudgetsHistory(): ResponseEntity<List<HistoryDto>> = ResponseEntity.ok(budgetService.getHistory());
 
 }

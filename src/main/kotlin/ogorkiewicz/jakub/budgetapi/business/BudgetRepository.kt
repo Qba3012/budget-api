@@ -7,4 +7,5 @@ interface BudgetRepository {
     fun findBySlug(slug: String): Budget?
     fun checkIfExistBySlug(slug: String): Boolean
     fun findLatest(): Budget?
+    fun findAll(): List<Budget>
 }
