@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 interface JPABudgetRepository : JpaRepository<Budget, Long > {
     fun findBySlug(slug: String): Budget?
     fun existsBySlug(slug: String): Boolean
+    fun findFirstByOrderByMonthDescYearDesc(): Budget?
 }

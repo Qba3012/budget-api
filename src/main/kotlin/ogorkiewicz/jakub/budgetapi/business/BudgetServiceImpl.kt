@@ -20,4 +20,9 @@ class BudgetServiceImpl(val budgetRepository: BudgetRepository, val modelMapper:
         val entity = budgetRepository.findBySlug(slug)
         return if (null == entity) null else modelMapper.toDto(entity)
     }
+
+    override fun findLatest(): BudgetDto? {
+        val entity = budgetRepository.findLatest()
+        return if (null == entity) null else modelMapper.toDto(entity)
+    }
 }

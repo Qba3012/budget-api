@@ -25,4 +25,10 @@ class BudgetController(val budgetService: BudgetService) {
         return if(null == budgetDto) ResponseEntity.notFound().build() else ResponseEntity.ok(budgetDto)
     }
 
+    @GetMapping("/latest", produces = [APPLICATION_JSON_VALUE])
+    fun getLatestBudget(): ResponseEntity<BudgetDto> {
+        val budgetDto = budgetService.findLatest()
+        return if(null == budgetDto) ResponseEntity.notFound().build() else ResponseEntity.ok(budgetDto)
+    }
+
 }

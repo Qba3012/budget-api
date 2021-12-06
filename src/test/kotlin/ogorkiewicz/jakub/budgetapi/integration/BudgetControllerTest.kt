@@ -67,6 +67,22 @@ internal class BudgetControllerTest {
     }
 
     @Test
+    fun `should get latest budget if exists`() {
+        // given
+        val budgetDto = DummyData.generateBudgetDto()
+        createBudget(budgetDto)
+
+        //when //then
+        mockMvc.get("$BUDGETS_PATH/latest") {
+            accept = APPLICATION_JSON
+        }.andExpect {
+            content { contentType(APPLICATION_JSON) }
+            content { match(compareBudgetResponse(budgetDto)) }
+        }
+
+    }
+
+    @Test
     fun `should not add new budget with wrong general data`() {
         //given
         val invalidBudgetDto = BudgetDto(

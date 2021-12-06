@@ -55,6 +55,19 @@ internal class BudgetServiceImplTest {
     }
 
     @Test
+    fun shouldGetLatestBudget() {
+        // given
+        given(budgetRepository.findLatest()).willReturn(DummyData.BUDGET)
+        given(modelMapper.toDto(DummyData.BUDGET)).willReturn(DummyData.BUDGET_DTO)
+
+        // when
+        val budgetDto = budgetService.findLatest()
+
+        // then
+        assertThat(budgetDto).usingRecursiveComparison().isEqualTo(DummyData.BUDGET_DTO)
+    }
+
+    @Test
     fun shouldNotFindBudgetIfSlugDoesNotExist() {
         // given
         given(budgetRepository.findBySlug(DummyData.BUDGET_SLUG)).willReturn(null)
